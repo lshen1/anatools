@@ -1,5 +1,7 @@
 # anatools
 
+[![Build Status](https://travis-ci.org/lshen1/anatools.svg?branch=master)](https://travis-ci.org/lshen1/anatools)
+
 The **anatools** R package is a collection of analytic tools for analyzing high-throughput data,
 including microarray and next-generation-sequencing to quickly produce results, tables and charts.
 It can be used to:
