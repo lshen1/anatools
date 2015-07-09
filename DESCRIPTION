@@ -1,0 +1,44 @@
+Package: anatools
+Title: A collection of analytic tools
+Version: 0.1
+Authors@R: person("Li", "Shen", email = "lshen7@asu.edu",
+    role = c("aut", "cre"))
+Description: A collection of analytic tools in R. I have
+    accumulated a suite of functions that help me quickly
+    produce results, tables and charts that I find useful for
+    analyzing high-throughput data, including microarray and
+    next-generation-sequencing. It also allows for easy
+    reproducibility and collaboration both within the MD Anderson
+    Cancer Center (MDACC) and with the broader community.
+Depends:
+    R (>= 3.1.0),
+    ClassComparison,
+    ClassDiscovery,
+    DESeq2,
+    data.table,
+    ggplot2,
+    gplots,
+    gridExtra,
+    Hmisc,
+    knitrBootstrap,
+    limma,
+    mclust,
+    NMF,
+    PreProcess,
+    plyr,
+    reshape2,
+    RColorBrewer,
+    RGraphics,
+    scales,
+    stringr,
+    survival,
+    VennDiagram
+License: file LICENSE
+LazyData: true
+Collate:
+    'BI.R'
+    'autoplot.R'
+    'color.R'
+    'ggplot_wrapper.R'
+    'modelTesting.R'
+    'utility_function.R'
