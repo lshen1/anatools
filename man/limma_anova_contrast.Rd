@@ -34,8 +34,7 @@ mFAC <- c(rep("Control", 3), rep("Treat1", 3), rep("Treat2", 3))
 mContr <- c("Treat1-Control", "Treat2-Control", "Treat2-Treat1")
 comTest <- limma_anova_contrast(data=y, fac=mFAC, contrast=mContr)
 names(comTest)
-comTest[[2]][1:5,]
-gg_Bum_Tab(comTest[[2]][,'p.value'], main="Controls vs. Tumors", heights=c(0.75, 0.25))
+names(comTest[["results"]])
 }
 \seealso{
 \code{\link{lmFit}} which this function wraps.

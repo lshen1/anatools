@@ -1,13 +1,16 @@
 #' Perform Two-Sample t-tests using `limma` package in R 
 #'
 #' Fit linear model for each gene given a series of arrays using `limma` package in R.
+#' 
 #' @param data input a expression data.frame (probes in row; samples in column).
 #' @param ctlS input the sample names of the control group as the reference. 
 #' @param trtS input the sample names of the treatment group.
 #' @param ctlS.name input the name of the control group using in the comparison. 
-#' @param trtS.name input the name of the treatment group using in the comparison. 
+#' @param trtS.name input the name of the treatment group using in the comparison.
+#'  
 #' @return a list of two tables. 'dds' contains the original data used to perform the test;
-#'  `results` contains the testing statistics.  
+#'  `results` contains the testing statistics. 
+#'   
 #' @seealso \code{\link{lmFit}} which this function wraps.
 #' @export
 #' @examples
@@ -26,7 +29,6 @@
 #' names(comTest)
 #' comTest[[2]][1:5,]
 #' comTest2[[2]][1:5,]
-#' gg_Bum_Tab(comTest[[2]][,'p.value'], main="Controls vs. Tumors", heights=c(0.75, 0.25))
 limma_ttest <- function(data, ctlS, trtS, ctlS.name=NULL, trtS.name=NULL){
   dat.ctl <- data[,ctlS]
   dat.trt <- data[,trtS]
@@ -91,11 +93,14 @@ limma_ttest <- function(data, ctlS, trtS, ctlS.name=NULL, trtS.name=NULL){
 #' Perform One-way ANOVA with contrast using `limma` package in R 
 #'
 #' Fit linear model for each gene given a series of arrays using `limma` package in R.
+#' 
 #' @param data input a expression data.frame (probes in row; samples in column).
 #' @param fac input the sample grouping info that you want to compare.
 #' @param contrast inpt the contrast between any two given groups in 'fac'.
+#' 
 #' @return a list of two tables. 'dds' contains the original data used to perform the test;
-#'  `results` contains the testing statistics.  
+#'  `results` contains the testing statistics. 
+#'   
 #' @seealso \code{\link{lmFit}} which this function wraps.
 #' @export
 #' @examples
@@ -112,8 +117,7 @@ limma_ttest <- function(data, ctlS, trtS, ctlS.name=NULL, trtS.name=NULL){
 #' mContr <- c("Treat1-Control", "Treat2-Control", "Treat2-Treat1")
 #' comTest <- limma_anova_contrast(data=y, fac=mFAC, contrast=mContr)
 #' names(comTest)
-#' comTest[[2]][1:5,]
-#' gg_Bum_Tab(comTest[[2]][,'p.value'], main="Controls vs. Tumors", heights=c(0.75, 0.25))
+#' names(comTest[["results"]])
 limma_anova_contrast <- function(data, fac, contrast){
   if (is.factor(fac)) {
     fac <- fac
@@ -170,19 +174,24 @@ limma_anova_contrast <- function(data, fac, contrast){
 #' Perform One-way ANOVA with TukeyHSD using `aov` package in R 
 #'
 #' Fit linear model for each gene given a series of arrays using `aov` package in R.
+#' 
 #' @param expr input a vector of expression values.
 #' @param fac input the sample grouping info that you want to compare.
+#' @param include input a subset of data if needed. Default is to use all data.
 #' @param showname default is NULL. It will show the name of the method selected,
-#'  otherwise the character would be used to assign the rowname of the result. 
+#'  otherwise the character would be used to assign the rowname of the result.
+#'   
 #' @return a list of two tables. 'dds' contains the original data used to perform the test;
 #'  `results` contains the testing statistics.  
-#' @seealso \code{\link{aov, TukeyHSD}} which this function wraps.
+#'  
+#' @seealso \code{\link{aov}} and \code{\link{TukeyHSD}} which this function wraps.
 #' @export
 #' @examples
 #' sd <- 0.3*sqrt(4/rchisq(100,df=4))
 #' y <- data.frame(matrix(rnorm(100*12,sd=sd),100,12))
 #' rownames(y) <- paste("Probe",1:100, sep="_")
-#' colnames(y) <- c(paste("A", 1:3, sep=""), paste("B", 1:3, sep=""), paste("C", 1:3, sep=""), paste("D", 1:3, sep=""))
+#' colnames(y) <- c(paste("A", 1:3, sep=""), paste("B", 1:3, sep=""),
+#'  paste("C", 1:3, sep=""), paste("D", 1:3, sep=""))
 #' y[1:50,4:6] <- y[1:50,4:6] + 2
 #' y[51:75,7:9] <- y[51:75,7:9] + 3
 #' y[sample(seq(1,100), 10), 1] <- NA
@@ -232,11 +241,15 @@ aovTukeyHSD_Expr <- function(expr, fac, include=NULL, showname=NULL){
 #' Perform One-way ANOVA with TukeyHSD using `aov` package in R 
 #'
 #' Fit linear model for each gene given a series of arrays using `aov` package in R.
-#' @param expr input a vector of expression values.
+#' 
+#' @param mat input a matrix of expression values.
 #' @param fac input the sample grouping info that you want to compare.
+#' @param include input a subset of data if needed. Default is to use all data.
+#' 
 #' @return a list of two tables. 'dds' contains the original data used to perform the test;
 #'  `results` contains the testing statistics.  
-#' @seealso \code{\link{aov, TukeyHSD}} which this function wraps.
+#'  
+#' @seealso \code{\link{aov}} and \code{\link{TukeyHSD}} which this function wraps.
 #' @export
 #' @examples
 #' sd <- 0.3*sqrt(4/rchisq(100,df=4))
@@ -251,7 +264,6 @@ aovTukeyHSD_Expr <- function(expr, fac, include=NULL, showname=NULL){
 #' mFAC <- c(rep("Control", 3), rep("Treat1", 3), rep("Treat2", 3))
 #' comTest <- aovTukeyHSD_VecMat(mat=y, fac=mFAC)
 #' comTest <- aovTukeyHSD_VecMat(mat=y, fac=mFAC, include=c("Control", "Treat1", "Treat2"))
-#' gg_Bum_Tab(comTest[[2]][,'p.value'], main="Overall ANOVA", heights=c(0.75, 0.25))
 aovTukeyHSD_VecMat <- function(mat, fac, include=NULL){
   if(ncol(mat)!=length(fac)) stop(sprintf("mat ncol: %d\nfac length: %d\n", ncol(mat), length(fac)))
   
@@ -282,11 +294,14 @@ aovTukeyHSD_VecMat <- function(mat, fac, include=NULL){
 #' Perform Negative binomial generalized linear models using `DEseq2` package in R 
 #'
 #' Fit linear model for each gene given a series of arrays using `DEseq2` package in R.
+#' 
 #' @param data input a expression data.frame (probes in row; samples in column).
 #' @param ctlS input the sample names of the control group as the reference. 
 #' @param trtS input the sample names of the treatment group.
+#' 
 #' @return a list of two tables. 'dds' contains the original data used to perform the test;
-#'  `results` contains the testing statistics.  
+#'  `results` contains the testing statistics. 
+#'   
 #' @seealso \code{\link{DESeqDataSetFromMatrix}} which this function wraps.
 #' @export
 #' @examples
@@ -305,7 +320,6 @@ aovTukeyHSD_VecMat <- function(mat, fac, include=NULL){
 #' names(comTest)
 #' comTest[[2]][1:5,]
 #' comTest2[[2]][1:5,]
-#' gg_Bum_Tab(comTest[[2]][,'p.value'], main="Controls vs. Tumors", heights=c(0.75, 0.25))
 deseq2_nbttest <- function(data, ctlS, trtS){
   dat.ctl <- data[,ctlS]
   dat.trt <- data[,trtS]
@@ -314,19 +328,19 @@ deseq2_nbttest <- function(data, ctlS, trtS){
   dat.target <- c(rep(as.character(substitute(ctlS)), length(ctlS)),
                   rep(as.character(substitute(trtS)), length(trtS)))
   Group <- factor(dat.target, levels=c(substitute(ctlS),substitute(trtS)))
-  colData <- data.frame(Group=Group)
-  dds <- DESeqDataSetFromMatrix(countData = dat.final,
-                                colData = colData,
-                                design = ~ Group)
+  mcolData <- data.frame(Group=Group)
+  dds <- DESeq2::DESeqDataSetFromMatrix(countData = dat.final,
+                                        colData = mcolData,
+                                        design = ~ Group)
   colData(dds)$Group <- factor(colData(dds)$Group,
                                levels=c(substitute(ctlS),substitute(trtS)))
-  dds <- DESeq(dds)
-  res <- results(dds)
+  dds <- DESeq2::DESeq(dds)
+  res <- DESeq2::results(dds)
   #res <- res[order(res$padj),]
   res.lis <- list()
   colnames(dds) <- colnames(dat.final)
   rank.res <- rank(as.data.frame(res)[,"pvalue"])
-  res.lis[[1]] <- assay(varianceStabilizingTransformation(dds, blind=TRUE))
+  res.lis[[1]] <- assay(DESeq2::varianceStabilizingTransformation(dds, blind=TRUE))
   res.lis[[2]] <- as.data.frame(res, Rank=rank.res)
   names(res.lis) <- c("dds", "results")
   return(res.lis)
@@ -351,6 +365,7 @@ deseq2_nbttest <- function(data, ctlS, trtS){
 #'  are deleted in pairs rather than deleting all rows of x having any missing
 #'  variables. Ranks are computed using efficient algorithms, using midranks for
 #'  ties. 
+#'  
 #' @param x a numeric matrix with at least 5 rows and at least 2 columns
 #'  (if y is absent). For print, x is an object produced by rcorr.
 #' @param y a numeric vector or matrix which will be concatenated to x. If y is
@@ -359,8 +374,10 @@ deseq2_nbttest <- function(data, ctlS, trtS){
 #'  are the Pearson linear correlations computed on the ranks of non-missing elements,
 #'  using midranks for ties.
 #' @param showname default is NULL. It will show the name of the method selected,
-#'  otherwise the character would be used to assign the rowname of the result. 
-#' @return the correlation coefficient and p-value.  
+#'  otherwise the character would be used to assign the rowname of the result.
+#'   
+#' @return the correlation coefficient and p-value. 
+#'  
 #' @seealso \code{\link{rcorr}} which this function wraps.
 #' @export
 #' @examples
@@ -391,13 +408,16 @@ rcorr_XY <- function(x, y, method=c("pearson", "spearman"), showname=NULL){
 #'  are deleted in pairs rather than deleting all rows of x having any missing
 #'  variables. Ranks are computed using efficient algorithms, using midranks for
 #'  ties. 
+#'  
 #' @param vec a numeric vector which will be concatenated to the row of 'mat'. 
 #' @param mat a numeric matrix with at least 5 rows and at least 2 columns.
 #'  For print, x is an object produced by rcorr.
 #' @param method specifies the type of correlations to compute. Spearman correlations
 #'  are the Pearson linear correlations computed on the ranks of non-missing elements,
 #'  using midranks for ties. 
-#' @return the correlation coefficient and p-value.  
+#'  
+#' @return the correlation coefficient and p-value.
+#'   
 #' @seealso \code{\link{rcorr}} which this function wraps.
 #' @export
 #' @examples
@@ -427,7 +447,8 @@ rcorr_VecMat <- function(vec, mat, method=c("pearson", "spearman")){
 #' variables, time dependent strata, multiple events per subject, and 
 #' other extensions are incorporated using the counting process 
 #' formulation of Andersen and Gill.
-#' 
+#'
+#' @param expr input a vector of expression values. 
 #' @param time for right censored data, this is the follow up time. For 
 #'  interval data, the first argument is the starting time for the interval.
 #' @param event The status indicator, normally 0=alive, 1=dead. Other choices
@@ -436,11 +457,14 @@ rcorr_VecMat <- function(vec, mat, method=c("pearson", "spearman")){
 #'  censored, 1=event at 'time', 2=left censored, 3=interval 
 #'  censored.  Although unusual, the event indicator can be 
 #'  omitted, in which case all subjects are assumed to have an event.
-#' @param expr input a vector of expression values.
 #' @param showname default is NULL. It will show the name of the input covariate,
-#'  otherwise the character would be used to assign the rowname of the result. 
-#' @return the correlation coefficient and p-value.  
-#' @seealso \code{\link{coxph, Surv}} which this function wraps.
+#'  otherwise the character would be used to assign the rowname of the result.
+#' @param LRT p-value is return from likelihood ratio test as default. Otherwise is
+#'  logrank test version (wald test). 
+#'   
+#' @return the correlation coefficient and p-value.
+#'   
+#' @seealso \code{\link{coxph}} and \code{\link{Surv}} which this function wraps.
 #' @export
 #' @examples
 #' hmohiv<-read.table("http://www.ats.ucla.edu/stat/r/examples/asa/hmohiv.csv", sep=",", header = TRUE) 
@@ -482,7 +506,8 @@ coxph_Expr <- function(expr, time, event, showname=NULL, LRT=TRUE){
 #' variables, time dependent strata, multiple events per subject, and 
 #' other extensions are incorporated using the counting process 
 #' formulation of Andersen and Gill.
-#' 
+#'
+#' @param mat input a expression data.frame (probes in row; samples in column). 
 #' @param time for right censored data, this is the follow up time. For 
 #'  interval data, the first argument is the starting time for the interval.
 #' @param event The status indicator, normally 0=alive, 1=dead. Other choices
@@ -491,9 +516,12 @@ coxph_Expr <- function(expr, time, event, showname=NULL, LRT=TRUE){
 #'  censored, 1=event at 'time', 2=left censored, 3=interval 
 #'  censored.  Although unusual, the event indicator can be 
 #'  omitted, in which case all subjects are assumed to have an event.
-#' @param mat input a expression data.frame (probes in row; samples in column).
-#' @return the correlation coefficient and p-value.  
-#' @seealso \code{\link{coxph, Surv}} which this function wraps.
+#' @param LRT p-value is return from likelihood ratio test as default. Otherwise is
+#'  logrank test version (wald test).
+#'  
+#' @return the correlation coefficient and p-value.
+#'   
+#' @seealso \code{\link{coxph}} and \code{\link{Surv}} which this function wraps.
 #' @export
 #' @examples
 #' mat <- matrix(rnorm(400), ncol=100) 
@@ -530,11 +558,15 @@ coxph_VecMat <- function(mat, time, event, LRT=TRUE){
 #' Perform Fisher's exact test between each row in a matrix and a vector using `stats` package in R 
 #'
 #' Performs Fisher's exact test for testing the null of independence of rows and columns
-#'  in a contingency table with fixed marginals. 
+#'  in a contingency table with fixed marginals.
+#'   
 #' @param group a vector of factor which will be concatenated to the row of 'data'. 
 #' @param data a matrix with at least 2 outcomes (0/1; Mut/WT, etc).
 #' @param rowlevel specifies the order of factor use in a contingency table.
-#' @return the contingency table and p-value.  
+#' @param ... other parameters in fisher.test function. 
+#' 
+#' @return the contingency table and p-value. 
+#'  
 #' @seealso \code{\link{fisher.test}} which this function wraps.
 #' @export
 #' @examples
@@ -583,11 +615,15 @@ stats_fisher.test <- function(data, group, rowlevel, ...){
 
 #' Perform Pearson's Chi-squared Test between each row in a matrix and a vector using `stats` package in R 
 #'
-#''chisq.test' performs chi-squared contingency table tests and goodness-of-fit tests. 
+#''chisq.test' performs chi-squared contingency table tests and goodness-of-fit tests.
+#' 
 #' @param group a vector of factor which will be concatenated to the row of 'data'. 
 #' @param data a matrix with at least 2 outcomes (0/1; Mut/WT, etc).
 #' @param rowlevel specifies the order of factor use in a contingency table.
+#' @param ... other parameters in chisq.test function. 
+#' 
 #' @return the contingency table and p-value.  
+#' 
 #' @seealso \code{\link{chisq.test}} which this function wraps.
 #' @export
 #' @examples
@@ -638,12 +674,16 @@ stats_chisq.test <- function(data, group, rowlevel, ...){
 #' Performs Wilcoxon tests between each row in a matrix and a vector using `stats` package in R 
 #'
 #''Wilcox.test' performs one- and two-sample Wilcoxon tests on vectors of data; the latter
-#'  is also known as 'Mann-Whitney' test. 
+#'  is also known as 'Mann-Whitney' test.
+#'   
 #' @param group a vector of factor which will be concatenated to the row of 'data'. 
 #' @param data a matrix with at least 2 outcomes (0/1; Mut/WT, etc).
-#' @param rowlevel specifies the order of factor use in a contingency table.
-#' @return the contingency table and p-value.  
-#' @seealso \code{\link{chisq.test}} which this function wraps.
+#' @param gpMat specifies whether group info is in thr matrix. Default is FALSE.
+#' @param ... other parameters in wilcox.test function. 
+#' 
+#' @return the contingency table and p-value. 
+#'  
+#' @seealso \code{\link{wilcox.test}} which this function wraps.
 #' @export
 #' @examples
 #' dat <- matrix(rnorm(10000*15*2), 5, 30)

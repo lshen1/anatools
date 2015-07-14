@@ -36,7 +36,6 @@ comTest2 <- limma_ttest(y, ctlS=Controls, trtS=Tumors, ctlS.name="Normal", trtS.
 names(comTest)
 comTest[[2]][1:5,]
 comTest2[[2]][1:5,]
-gg_Bum_Tab(comTest[[2]][,'p.value'], main="Controls vs. Tumors", heights=c(0.75, 0.25))
 }
 \seealso{
 \code{\link{DESeqDataSetFromMatrix}} which this function wraps.

@@ -21,6 +21,9 @@ omitted, in which case all subjects are assumed to have an event.}
 
 \item{showname}{default is NULL. It will show the name of the input covariate,
 otherwise the character would be used to assign the rowname of the result.}
+
+\item{LRT}{p-value is return from likelihood ratio test as default. Otherwise is
+ logrank test version (wald test).}
 }
 \value{
 the correlation coefficient and p-value.
@@ -38,6 +41,6 @@ coxph_Expr(expr=age, time=time, event=censor)
 detach(hmohiv)
 }
 \seealso{
-\code{\link{coxph, Surv}} which this function wraps.
+\code{\link{coxph}} and \code{\link{Surv}} which this function wraps.
 }
 

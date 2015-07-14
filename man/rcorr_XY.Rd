@@ -18,7 +18,7 @@ are the Pearson linear correlations computed on the ranks of non-missing element
 using midranks for ties.}
 
 \item{showname}{default is NULL. It will show the name of the method selected,
-otherwise the character would be used to assign the rowname of the result.}
+ otherwise the character would be used to assign the rowname of the result.}
 }
 \value{
 the correlation coefficient and p-value.

@@ -13,8 +13,8 @@ rcorr_VecMat(vec, mat, method = c("pearson", "spearman"))
 For print, x is an object produced by rcorr.}
 
 \item{method}{specifies the type of correlations to compute. Spearman correlations
-are the Pearson linear correlations computed on the ranks of non-missing elements,
-using midranks for ties.}
+ are the Pearson linear correlations computed on the ranks of non-missing elements,
+ using midranks for ties.}
 }
 \value{
 the correlation coefficient and p-value.

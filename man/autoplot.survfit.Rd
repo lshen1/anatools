@@ -21,6 +21,8 @@
 
 \item{...}{Additional arguments (not implemented)}
 
+\item{timeby}{the survival time interval}
+
 \item{xlab}{Label for x axis on survival plot}
 
 \item{ylab}{Label for y axis on survival plot}
@@ -34,6 +36,8 @@
 \item{axisLabSize}{Title size for label axes}
 
 \item{survSize}{Survival line size}
+
+\item{assignCol}{default is NULL}
 
 \item{type}{If \code{type="single"} (the default), plots single lines.
 \cr \cr
@@ -65,6 +69,10 @@ If \code{jitter="all"} add some vertical noise to all survival lines}
 \cr Use 10 for circular marks}
 
 \item{censSize}{Size of marks to indicate censored onservations}
+
+\item{leg.x}{input the x.axis position of the legend}
+
+\item{leg.y}{input the y.axis position of the legend}
 
 \item{legend}{If \code{legend=FALSE}, no legends will be produced
 for the plot or table}

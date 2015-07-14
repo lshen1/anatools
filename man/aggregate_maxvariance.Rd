@@ -12,10 +12,10 @@ aggregate_maxvariance(dat, annot, symcol = "Symbol")
 \item{annot}{input the annotation of the expression data (must have identical rownames).}
 
 \item{symcol}{default is set to "Symbol" which defines the column with multiple probes
-information from the annotation.}
+ information from the annotation.}
 }
 \value{
-a list contains the aggregated "data" and "annot".
+a list contains the list of "data" and "annot" with maximum variance probesets.
 }
 \description{
 In microarray analysis, some genes are associated with multiple probes. In practice,
@@ -37,12 +37,13 @@ y[sample(seq(1,100), 10), 1] <- NA
 y[sample(seq(1,100), 10), 3] <- NA
 y[sample(seq(1,100), 10), 5] <- NA
 set.seed(123)
-annot.y <- data.frame(ID=rownames(y), Symbol=paste("Gene", sort(sample(seq(1, 75), 100, replace=TRUE)), sep="_"))
+annot.y <- data.frame(ID=rownames(y),
+ Symbol=paste("Gene", sort(sample(seq(1, 75), 100, replace=TRUE)), sep="_"))
 rownames(annot.y) <- rownames(y)
 mvDat <- aggregate_maxvariance(y, annot.y, symcol="Symbol")
 names(mvDat)
 }
 \seealso{
-\code{\link{aggregate}} which this function wraps.
+\code{\link{var}} which this function wraps.
 }
 

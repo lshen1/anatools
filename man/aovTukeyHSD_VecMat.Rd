@@ -7,9 +7,11 @@
 aovTukeyHSD_VecMat(mat, fac, include = NULL)
 }
 \arguments{
+\item{mat}{input a matrix of expression values.}
+
 \item{fac}{input the sample grouping info that you want to compare.}
 
-\item{expr}{input a vector of expression values.}
+\item{include}{input a subset of data if needed. Default is to use all data.}
 }
 \value{
 a list of two tables. 'dds' contains the original data used to perform the test;
@@ -31,9 +33,8 @@ y[sample(seq(1,100), 10), 5] <- NA
 mFAC <- c(rep("Control", 3), rep("Treat1", 3), rep("Treat2", 3))
 comTest <- aovTukeyHSD_VecMat(mat=y, fac=mFAC)
 comTest <- aovTukeyHSD_VecMat(mat=y, fac=mFAC, include=c("Control", "Treat1", "Treat2"))
-gg_Bum_Tab(comTest[[2]][,'p.value'], main="Overall ANOVA", heights=c(0.75, 0.25))
 }
 \seealso{
-\code{\link{aov, TukeyHSD}} which this function wraps.
+\code{\link{aov}} and \code{\link{TukeyHSD}} which this function wraps.
 }
 

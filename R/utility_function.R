@@ -2,9 +2,12 @@
 #'
 #' This function allows you to list the names of objects from
 #'  a R file/RData
+#'  
 #' @param RData input a R file/RData containing objects.
+#' 
 #' @return a vector of character strings giving the names of
 #'  the objects in a R file/RData.
+#'  
 #' @seealso \code{\link{objects}} which this function wraps.
 #' @export
 #' @examples
@@ -14,18 +17,21 @@
 #' dat.dir <- file.path("./", "xy.RData")
 #' show_robj(dat.dir)
 show_robj <- function(RData){
-	e <- new.env()
-	load(RData, envir=e)
-	return(objects(e))
+  tempEnv <- new.env()
+	load(RData, envir=tempEnv)
+	return(objects(tempEnv))
 }
 
 #' Get one of the objects from a R file/RData.  
 #'
 #' This function allows you to get one of the objects from
 #'  a R file/RData.
+#'  
 #' @param x input the name of object that users specify.    
 #' @param RData input a R file/RData containing objects.
+#' 
 #' @return an object that user specified from a R file/RData.
+#' 
 #' @seealso \code{\link{get}} which this function wraps.
 #' @export
 #' @examples
@@ -36,19 +42,23 @@ show_robj <- function(RData){
 #' show_robj(dat.dir)
 #' rm(x, y)
 #' x <- get_robj(x="x", dat.dir)
+#' x
 get_robj <- function(x, RData){
   tempEnv <- new.env()
   load(RData, tempEnv)
-  res <- get(x, envi=tempEnv)
+  res <- get(x, envir=tempEnv)
   return(res)
 }
 
 #' Is an Object Defined?  
 #'
 #' Look for an R object of the given name.
-#' @param object input a variable name (doesn't need to be a character string).    
+#' 
+#' @param object input a variable name (doesn't need to be a character string).
+#'     
 #' @return Logical, true if and only if an object of the correct name
 #'  and mode is found.
+#'  
 #' @seealso \code{\link{exists}} which this function wraps.
 #' @export
 #' @examples
@@ -60,25 +70,28 @@ exists_robj <- function(object)
   return(exists(as.character(substitute(object))))
 }
 
-#' Rename an object to a new name.  
+#' Rename an R object to a new name.  
 #'
-#' Rename an object to a new in an environment. If overwrite parameter is set to
+#' Rename an R object in an environment. If overwrite parameter is set to
 #'  TRUE (default), the original object would be deleted.
-#' @param a input an object that user would like to rename.  
-#' @param b input a new name of an object that user define.
+#'  
+#' @param from input an object that user would like to rename.  
+#' @param to input a new name of an object that user define.
 #' @param overwrite default is set to TRUE. The original object would be deleted
-#'  after rename it.     
+#'  after rename it.
+#'       
 #' @return an object with a new name user defined.
+#' 
 #' @seealso \code{\link{assign}} which this function wraps.
 #' @export
 #' @examples
 #' x=1:10
-#' rename_robj(x, newx)
+#' rename_robj(from=x, to=newx)
 #' exists("x")
 #' exists("newx")
-rename_robj <- function (a, b, overwrite=TRUE) {
-  anm <- deparse(substitute(a))
-  bnm <- deparse(substitute(b))
+rename_robj <- function (from, to, overwrite=TRUE) {
+  anm <- deparse(substitute(from))
+  bnm <- deparse(substitute(to))
   if (!exists(anm,where=1,inherits=FALSE)) stop(paste(anm, "does not exist.\n"))
   if (exists(bnm,where=1,inherits=FALSE)) {
     #ans <- readline(paste("Overwrite ", bnm, "? (y/n) ", sep =""))
@@ -86,7 +99,7 @@ rename_robj <- function (a, b, overwrite=TRUE) {
     if (overwrite != TRUE)
       return(invisible())
   }
-  assign(bnm, a, pos = 1)
+  assign(bnm, from, pos = 1)
   rm(list = anm, pos = 1)
   invisible()
 }
@@ -96,13 +109,16 @@ rename_robj <- function (a, b, overwrite=TRUE) {
 #' In microarray analysis, some genes are associated with multiple probes. In practice,
 #'  sometime we need to summarize the expression in gene level (each gene has only one
 #'  value of a given sample). This function would aggregate the microarry data based on
-#'  the maximum variance probe of gene probesets.  
+#'  the maximum variance probe of gene probesets.
+#'    
 #' @param dat input a expression data.frame (probes in row; samples in column).  
 #' @param annot input the annotation of the expression data (must have identical rownames).
 #' @param symcol default is set to "Symbol" which defines the column with multiple probes
-#'  information from the annotation.    
-#' @return a list contains the aggregated "data" and "annot". 
-#' @seealso \code{\link{aggregate}} which this function wraps.
+#'  information from the annotation.
+#'      
+#' @return a list contains the list of "data" and "annot" with maximum variance probesets.
+#'  
+#' @seealso \code{\link{var}} which this function wraps.
 #' @export
 #' @examples
 #' # Simulate gene expression data for 100 probes and 6 microarrays
@@ -118,7 +134,8 @@ rename_robj <- function (a, b, overwrite=TRUE) {
 #' y[sample(seq(1,100), 10), 3] <- NA
 #' y[sample(seq(1,100), 10), 5] <- NA
 #' set.seed(123)
-#' annot.y <- data.frame(ID=rownames(y), Symbol=paste("Gene", sort(sample(seq(1, 75), 100, replace=TRUE)), sep="_"))
+#' annot.y <- data.frame(ID=rownames(y),
+#'  Symbol=paste("Gene", sort(sample(seq(1, 75), 100, replace=TRUE)), sep="_"))
 #' rownames(annot.y) <- rownames(y)
 #' mvDat <- aggregate_maxvariance(y, annot.y, symcol="Symbol")
 #' names(mvDat)                     
@@ -143,12 +160,15 @@ aggregate_maxvariance <- function(dat, annot, symcol="Symbol"){
 #' In microarray analysis, some genes are associated with multiple probes. In practice,
 #'  sometime we need to summarize the expression in gene level (each gene has only one
 #'  value of a given sample). This function would aggregate the microarry data based on
-#'  the mean of gene probesets.  
+#'  the mean of gene probesets.
+#'    
 #' @param dat input a expression data.frame (probes in row; samples in column).  
 #' @param annot input the annotation of the expression data (must have identical rownames).
 #' @param symcol default is set to "Symbol" which defines the column with multiple probes
-#'  information from the annotation.    
-#' @return a list contains the aggregated "data" and "annot". 
+#'  information from the annotation.
+#'      
+#' @return a list contains the aggregated "data" and "annot".
+#'  
 #' @seealso \code{\link{aggregate}} which this function wraps.
 #' @export
 #' @examples
@@ -165,7 +185,8 @@ aggregate_maxvariance <- function(dat, annot, symcol="Symbol"){
 #' y[sample(seq(1,100), 10), 3] <- NA
 #' y[sample(seq(1,100), 10), 5] <- NA
 #' set.seed(123)
-#' annot.y <- data.frame(ID=rownames(y), Symbol=paste("Gene", sort(sample(seq(1, 75), 100, replace=TRUE)), sep="_"))
+#' annot.y <- data.frame(ID=rownames(y),
+#'  Symbol=paste("Gene", sort(sample(seq(1, 75), 100, replace=TRUE)), sep="_"))
 #' rownames(annot.y) <- rownames(y)
 #' mnDat <- aggregate_mean(y, annot.y, symcol="Symbol")
 #' names(mnDat)                     
@@ -186,13 +207,17 @@ aggregate_mean <- function(dat, annot, symcol="Symbol"){
 
 
 
-#' Create directory/folder after checking directory/folder existence 
+#' Create directory/folder after checking directory/folder existence using a direct path 
 #'
 #' This function would check the directory existence. If the folder doesn't exist,
 #'  it creates the folder with permission mode to `777`.
-#' @param fname input the folder user would like to create.       
+#'  
+#' @param fname input the folder user would like to create. 
+#'       
 #' @return a folder with user defined name if the folder doesn't exist.
-#' @seealso \code{\link{dir.create}} which this function wraps. Also see \code{\link{create_folders}}.
+#' 
+#' @seealso \code{\link{dir.create}} which this function wraps. Also see \code{\link{create_folders}}
+#'  for using a character string.
 #' @export
 #' @examples
 #' create_folder("./test")
@@ -206,13 +231,17 @@ create_folder <- function(fname){
   }
 }
 
-#' Create directory/folder after checking directory/folder existence 
+#' Create directory/folder after checking directory/folder existence using a character string 
 #'
 #' This function would check the directory existence. If the folder doesn't exist,
 #'  it creates the folder with permission mode to `777`.
-#' @param fname input the folder user would like to create.       
+#'  
+#' @param fname input the folder user would like to create.
+#'        
 #' @return a folder with user defined name if the folder doesn't exist.
-#' @seealso \code{\link{dir.create}} which this function wraps. Also see \code{\link{create_folder}}.
+#' 
+#' @seealso \code{\link{dir.create}} which this function wraps. Also see \code{\link{create_folder}}
+#'  for using direct path.
 #' @export
 #' @examples
 #' create_folder("./test")
@@ -232,9 +261,12 @@ create_folders <- function(fname){
 #' In microarray data analysis, sometimes we only use a set of genes that PI selected for
 #'  further analysis. We would like to first see the availability of the gene list in
 #'  the annotation of the microarray data.
+#'  
 #' @param Annot input the vector of characters in annotation used to match the gene list.
-#' @param GeneList input a gene list.       
+#' @param GeneList input a gene list.
+#'        
 #' @return a summary of probes of the gene list in annotation.
+#' 
 #' @export
 #' @examples
 #' x <- c(sort(sample(3:23, 100, replace=TRUE)), NA)

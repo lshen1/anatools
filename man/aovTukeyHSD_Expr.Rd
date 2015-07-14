@@ -11,8 +11,10 @@ aovTukeyHSD_Expr(expr, fac, include = NULL, showname = NULL)
 
 \item{fac}{input the sample grouping info that you want to compare.}
 
+\item{include}{input a subset of data if needed. Default is to use all data.}
+
 \item{showname}{default is NULL. It will show the name of the method selected,
-otherwise the character would be used to assign the rowname of the result.}
+ otherwise the character would be used to assign the rowname of the result.}
 }
 \value{
 a list of two tables. 'dds' contains the original data used to perform the test;
@@ -25,7 +27,8 @@ Fit linear model for each gene given a series of arrays using `aov` package in R
 sd <- 0.3*sqrt(4/rchisq(100,df=4))
 y <- data.frame(matrix(rnorm(100*12,sd=sd),100,12))
 rownames(y) <- paste("Probe",1:100, sep="_")
-colnames(y) <- c(paste("A", 1:3, sep=""), paste("B", 1:3, sep=""), paste("C", 1:3, sep=""), paste("D", 1:3, sep=""))
+colnames(y) <- c(paste("A", 1:3, sep=""), paste("B", 1:3, sep=""),
+ paste("C", 1:3, sep=""), paste("D", 1:3, sep=""))
 y[1:50,4:6] <- y[1:50,4:6] + 2
 y[51:75,7:9] <- y[51:75,7:9] + 3
 y[sample(seq(1,100), 10), 1] <- NA
@@ -36,6 +39,6 @@ aovTukeyHSD_Expr(expr=y[1,], fac=mFAC, showname="expr")
 aovTukeyHSD_Expr(expr=y[1,], fac=mFAC, include=c("Control", "Treat1", "Treat2"), showname="expr")
 }
 \seealso{
-\code{\link{aov, TukeyHSD}} which this function wraps.
+\code{\link{aov}} and \code{\link{TukeyHSD}} which this function wraps.
 }
 

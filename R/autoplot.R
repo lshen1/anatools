@@ -1,95 +1,101 @@
 #' Generate Kaplan-Meier Plot and table using `survMisc` package in R 
 #'
 #' Generate Kaplan-Meier Plot and table using `survMisc` package in R.
-##' @name autoplot.survfit
-##' @export autoplot.survfit
-##' @method autoplot survfit
-##' @description Uses \code{ggplot2} to generate survival curves
-##'  (Kaplan-Meier plot) and a table showing no. of events per time period
-##' @title Generate a ggplot for \code{survfit} object
-##' @param object An object of class \code{survfit}
-##' @param ... Additional arguments (not implemented)
-##' @param xlab Label for x axis on survival plot
-##' @param ylab Label for y axis on survival plot
-##' @param title Title for survival plot
-##' @param titTextSize Title size for survival plot
-##' @param axisTitSize Title size for axes
-##' @param axisLabSize Title size for label axes
-##' @param survSize Survival line size
-##' @param type If \code{type="single"} (the default), plots single lines.
-##' \cr \cr
-##' If \code{type="CI"} will add lines indicating confidence intervals
-##' (taken from \code{upper} and \code{lower} values of \code{survfit} object.
-##' Higher values of \code{alpha} (tansparency) are recommended
-##' for this, e.g. \code{alpha=0.8}.
-##' \cr \cr
-##' If \code{type="fill"} will add filled rectangles from the survival lines to
-##' the confidence intervals above.
-##' @param palette Options are taken from
-##' \href{http://colorbrewer2.org/}{color_brewer}.
-##' \cr \cr
-##' \code{palette="Dark2"} (the default) is recommended for
-##' ##' \code{single} or \code{CI} plots.
-##' \cr \cr
-##' \code{palette="Set2"} is recommended for \code{fill} plots.
-##' @param jitter If \code{jitter="noEvents"}, adds some random, positive noise
-##' to survival lines with no events (i.e. all observations censored).
-##' This will bring them just above 1 on the y-axis, making them easier
-##' to see separately.
-##' \cr \cr
-##' If \code{jitter="all"} add some vertical noise to all survival lines
-##' @param legend If \code{legend=FALSE}, no legends will be produced
-##' for the plot or table
-##' @param legLabs These can be used to replace the names
-##' of the strata from the fit. Should be given in the same
-##' order as those strata
-##' @param legTitle Title for legend
-##' @param legTextSize Title size for legend
-##' @param legSize Legend (key) width and height
-##' @param alpha Alpha, transparency of lines indicating confidence intervals
-##' or filled rectangles. Should be in range \eqn{0-1}.
-##' Larger values e.g. \code{alpha=0.7} are recommended for confidence
-##' intervals
-##' @param censShape Shape of marks to indicate censored onservations.
-##' \cr Default is 3 which gives vertical ticks
-##' \cr Use 10 for circular marks
-##' @param censSize Size of marks to indicate censored onservations
-##' @param CIline Confidence interval line type
-##' @param fillLineSize Line size surrouding filled boxes
-##' @param pval If \code{pval=TRUE}, adds \eqn{p} value from
-##' log-rank test to plot
-##' @param sigP No. of significant digits to display in \eqn{p} value.
-##' Typically \eqn{1-3}
-##' @param pX Location of \eqn{p} value on x axis. Should be in range of
-##' \eqn{0 - 1}, where value is to be placed relative to the maximum observed
-##' time. E.g. \code{pX = 0.5} will place it half-way along x-axis
-##' @param pY Location of \eqn{p} value on y axis. Should be in range of
-##' \eqn{0 - 1}, as above
-##' @param tabTime If \code{tabTime="major"} this will use the major
-##' x-axis (time) marks from the survival plot.
-##' \cr
-##' If \code{tabTime="minor"}, minor axis marks are used instead
-##' @param tabTitle Table title
-##' @param tabTitTextSize Table title text size
-##' @param tabLegTextSize Table legend text size
-##' @param nRiskSize No. at risk - text size
-##' @return A \code{list} of \code{ggplot} objects, with elments \code{plot},
-##' the survial plot and \code{table} the table of events per time.
-##' This \code{list} has the additional \code{class} of
-##' \code{tableAndPlot}, allowing methods from \code{autoplot.tableAndPlot}.
-##' Further modifications may be made to the objects in the list if desired.
-##' @author Chris Dardis. Based on existing work by
-##' R. Saccilotto, Abhijit Dasgupta, Gil Tomas and Mark Cowley.
-##' @examples
-##' data(colon)
-##' fit <- survfit(Surv(time,status)~rx, data=colon)
-##' autoplot(fit)
-##' autoplot(fit, type="CI", pval=TRUE, pX=0.3,
-##'  title="Time to infection following catheter placement \n
-##'  by type of catheter, for dialysis patients")$plot
-##' fit <- survfit(Surv(time,status)~1, data=colon)
-##' autoplot(fit, legLabs="")$plot
-##' autoplot(fit, legend=FALSE, type="fill")$plot
+#' 
+#' @name autoplot.survfit
+#' @export autoplot.survfit
+#' @method autoplot survfit
+#' @description Uses \code{ggplot2} to generate survival curves
+#'  (Kaplan-Meier plot) and a table showing no. of events per time period
+#' @title Generate a ggplot for \code{survfit} object
+#' 
+#' @param object An object of class \code{survfit}
+#' @param ... Additional arguments (not implemented)
+#' @param timeby the survival time interval 
+#' @param xlab Label for x axis on survival plot
+#' @param ylab Label for y axis on survival plot
+#' @param title Title for survival plot
+#' @param titTextSize Title size for survival plot
+#' @param axisTitSize Title size for axes
+#' @param axisLabSize Title size for label axes
+#' @param survSize Survival line size
+#' @param assignCol default is NULL
+#' @param type If \code{type="single"} (the default), plots single lines.
+#' \cr \cr
+#' If \code{type="CI"} will add lines indicating confidence intervals
+#' (taken from \code{upper} and \code{lower} values of \code{survfit} object.
+#' Higher values of \code{alpha} (tansparency) are recommended
+#' for this, e.g. \code{alpha=0.8}.
+#' \cr \cr
+#' If \code{type="fill"} will add filled rectangles from the survival lines to
+#' the confidence intervals above.
+#' @param palette Options are taken from
+#' \href{http://colorbrewer2.org/}{color_brewer}.
+#' \cr \cr
+#' \code{palette="Dark2"} (the default) is recommended for
+#' ##' \code{single} or \code{CI} plots.
+#' \cr \cr
+#' \code{palette="Set2"} is recommended for \code{fill} plots.
+#' @param jitter If \code{jitter="noEvents"}, adds some random, positive noise
+#' to survival lines with no events (i.e. all observations censored).
+#' This will bring them just above 1 on the y-axis, making them easier
+#' to see separately.
+#' \cr \cr
+#' If \code{jitter="all"} add some vertical noise to all survival lines
+#' @param legend If \code{legend=FALSE}, no legends will be produced
+#' for the plot or table
+#' @param legLabs These can be used to replace the names
+#' of the strata from the fit. Should be given in the same
+#' order as those strata
+#' @param legTitle Title for legend
+#' @param legTextSize Title size for legend
+#' @param legSize Legend (key) width and height
+#' @param alpha Alpha, transparency of lines indicating confidence intervals
+#' or filled rectangles. Should be in range \eqn{0-1}.
+#' Larger values e.g. \code{alpha=0.7} are recommended for confidence
+#' intervals
+#' @param censShape Shape of marks to indicate censored onservations.
+#' \cr Default is 3 which gives vertical ticks
+#' \cr Use 10 for circular marks
+#' @param censSize Size of marks to indicate censored onservations
+#' @param leg.x input the x.axis position of the legend
+#' @param leg.y input the y.axis position of the legend
+#' @param CIline Confidence interval line type
+#' @param fillLineSize Line size surrouding filled boxes
+#' @param pval If \code{pval=TRUE}, adds \eqn{p} value from
+#' log-rank test to plot
+#' @param sigP No. of significant digits to display in \eqn{p} value.
+#' Typically \eqn{1-3}
+#' @param pX Location of \eqn{p} value on x axis. Should be in range of
+#' \eqn{0 - 1}, where value is to be placed relative to the maximum observed
+#' time. E.g. \code{pX = 0.5} will place it half-way along x-axis
+#' @param pY Location of \eqn{p} value on y axis. Should be in range of
+#' \eqn{0 - 1}, as above
+#' @param tabTime If \code{tabTime="major"} this will use the major
+#' x-axis (time) marks from the survival plot.
+#' \cr
+#' If \code{tabTime="minor"}, minor axis marks are used instead
+#' @param tabTitle Table title
+#' @param tabTitTextSize Table title text size
+#' @param tabLegTextSize Table legend text size
+#' @param nRiskSize No. at risk - text size
+#' @return A \code{list} of \code{ggplot} objects, with elments \code{plot},
+#' the survial plot and \code{table} the table of events per time.
+#' This \code{list} has the additional \code{class} of
+#' \code{tableAndPlot}, allowing methods from \code{autoplot.tableAndPlot}.
+#' Further modifications may be made to the objects in the list if desired.
+#' @author Chris Dardis. Based on existing work by
+#' R. Saccilotto, Abhijit Dasgupta, Gil Tomas and Mark Cowley.
+#' @examples
+#' data(colon)
+#' fit <- survfit(Surv(time,status)~rx, data=colon)
+#' autoplot(fit)
+#' autoplot(fit, type="CI", pval=TRUE, pX=0.3,
+#'  title="Time to infection following catheter placement \n
+#'  by type of catheter, for dialysis patients")$plot
+#' fit <- survfit(Surv(time,status)~1, data=colon)
+#' autoplot(fit, legLabs="")$plot
+#' autoplot(fit, legend=FALSE, type="fill")$plot
 autoplot.survfit <- function(object, ...,
                              timeby=500,
                              xlab="Time",
@@ -348,39 +354,43 @@ autoplot.survfit <- function(object, ...,
 #' Put Kaplan-Meier Plot and table together using `survMisc` package in R 
 #'
 #' Put Kaplan-Meier Plot and table together using `survMisc` package in R.
-##' @name autoplot.tableAndPlot
-##' @export autoplot.tableAndPlot
-##' @aliases autoplot.tableAndPlot
-##' @method autoplot tableAndPlot
-##' @include autoplot.R
-##' @description Uses \code{gridExtra::gridArrange}
-##' to arrange a plot, it's legend and a table.
-##' @title Arrange and plot a survival plot, it's legend and a table.
-##' @param object An object of class \code{tableAndPlot} as returned by
-##' \code{autoplot.survfit}
-##' @param ... Additional arguments (not implemented)
-##' @param hideTabLeg Suppress table legend. If \code{supTabLeg = FALSE}
-##' then a legend will also be shown for the table
-##' @param plotHeight Height of plot
-##' @param tabHeight Height of table
-##' @return A graph, as plotted by \code{gridExtra::grid.arrange}
-##' @details Arguments to \code{plotHeigth} and \code{tabHeight} are
-##' best specified as fractions adding to one e.g. \eqn{0.85 + 0.15 =1}.
-##' \cr \cr
-##' Other \code{ggplot2} objects may be plotted using this
-##' method. They need to be stored in a list of two (with element \code{table}
-##' if \code{hideTabLeg} is to be used). The class of this list should be
-##' modified with
-##' \cr \cr
-##' \code{class(list1) <- c("tableAndPlot", "list")}
-##' @author Chris Dardis. Based on existing work by
-##' R. Saccilotto, Abhijit Dasgupta, Gil Tomas and Mark Cowley.
-##' @examples
-##' data(colon)
-##' fit <- survfit(Surv(time,status)~rx, data=colon)
-##' autoplot(autoplot(fit, timeby=500, xlab="Time (Day)"))
-##' mycol <- c("rx=Lev"="blue", "rx=Lev+5FU"="red", "rx=Obs"="black")
-##' autoplot(autoplot(fit, timeby=500, xlab="Time (Day)", assignCol=mycol))
+#' 
+#' @name autoplot.tableAndPlot
+#' @export autoplot.tableAndPlot
+#' @aliases autoplot.tableAndPlot
+#' @method autoplot tableAndPlot
+#' @include autoplot.R
+#' @description Uses \code{gridExtra::gridArrange}
+#' to arrange a plot, it's legend and a table.
+#' @title Arrange and plot a survival plot, it's legend and a table.
+#' 
+#' @param object An object of class \code{tableAndPlot} as returned by
+#' \code{autoplot.survfit}
+#' @param ... Additional arguments (not implemented)
+#' @param hideTabLeg Suppress table legend. If \code{supTabLeg = FALSE}
+#' then a legend will also be shown for the table
+#' @param plotHeight Height of plot
+#' @param tabHeight Height of table
+#' 
+#' @return A graph, as plotted by \code{gridExtra::grid.arrange}
+#' 
+#' @details Arguments to \code{plotHeigth} and \code{tabHeight} are
+#' best specified as fractions adding to one e.g. \eqn{0.85 + 0.15 =1}.
+#' \cr \cr
+#' Other \code{ggplot2} objects may be plotted using this
+#' method. They need to be stored in a list of two (with element \code{table}
+#' if \code{hideTabLeg} is to be used). The class of this list should be
+#' modified with
+#' \cr \cr
+#' \code{class(list1) <- c("tableAndPlot", "list")}
+#' @author Chris Dardis. Based on existing work by
+#' R. Saccilotto, Abhijit Dasgupta, Gil Tomas and Mark Cowley.
+#' @examples
+#' data(colon)
+#' fit <- survfit(Surv(time,status)~rx, data=colon)
+#' autoplot(autoplot(fit, timeby=500, xlab="Time (Day)"))
+#' mycol <- c("rx=Lev"="blue", "rx=Lev+5FU"="red", "rx=Obs"="black")
+#' autoplot(autoplot(fit, timeby=500, xlab="Time (Day)", assignCol=mycol))
 autoplot.tableAndPlot <- function(object, ...,
                    hideTabLeg=TRUE,
                    plotHeight=0.80,

@@ -4,13 +4,16 @@
 #'  expression values that can separate into at least two groups. Here we wrap the
 #'  function 'bimodalIndex' in ClassDiscovery and function 'Mclust' in mclust and plot the
 #'  density with the grouping info.
+#'  
 #' @param x input a numeric vector that used to calculate bimodality index (BI).
 #' @param G input how many groups users want to separate based on mclust.
 #' @param annCol input an information of samples that is used to combine the sample. 
 #' @param annColors input the specified colors of the sample information.
 #' @param xlab character string specifying the label of X axis.
-#' @param main character string specifying the graph title. 
-#' @return a density-plot of BI value in the title of the legend with the grouping info. 
+#' @param main character string specifying the graph title.
+#'  
+#' @return a density-plot of BI value in the title of the legend with the grouping info.
+#'  
 #' @seealso \code{\link{bimodalIndex}} which this function wraps.
 #' @export
 #' @examples
@@ -33,20 +36,21 @@ BI_densityplot <- function(x, G=2, annCol=c("1"="Low", "2"="High"), annColors=NU
     bi <- ClassDiscovery::bimodalIndex(as.matrix(t(x)), verbose=FALSE)$BI
     bscore <- plyr::revalue(as.character(mclust::Mclust(x, G=G, "E")$classification),
                             annCol)
-    d_long <- data.frame(Score=x, Group=bscore)
+    d_long <- data.frame(x, bscore)
+    #colnames(d_long) <- c("Score", "Group")
     density.x <- min(x)
     density.y <- max(density(x)$y)
   
     if (!is.null(annColors)){
-      p1 <- ggplot2::ggplot(d_long, aes(x=Score)) +
+      p1 <- ggplot2::ggplot(d_long, aes(x=x)) +
         geom_density() + 
-        geom_rug(data=d_long, aes(x=Score, y=0, colour=Group)) +
+        geom_rug(data=d_long, aes(x=x, y=0, colour=bscore)) +
         scale_color_manual(values = annColors)
     }
     if (is.null(annColors)){
-      p1 <- ggplot2::ggplot(d_long, aes(x=Score)) +
+      p1 <- ggplot2::ggplot(d_long, aes(x=x)) +
           geom_density() +
-          geom_rug(data=d_long, aes(x=Score, y=0, colour=Group))
+          geom_rug(data=d_long, aes(x=x, y=0, colour=bscore))
     }
     p1 <- p1 + theme_bw() +
       theme(legend.position="right") +
@@ -64,10 +68,13 @@ BI_densityplot <- function(x, G=2, annCol=c("1"="Low", "2"="High"), annColors=NU
 #'  expression values that can separate into at least two groups. Here we wrap the
 #'  function 'bimodalIndex' in ClassDiscovery and function 'Mclust' in mclust and return
 #'  the the groups.
+#'  
 #' @param x input a numeric vector that used to calculate bimodality index (BI).
 #' @param G input how many groups users want to separate based on mclust.
-#' @param annCol input an information of samples that is used to combine the sample.  
-#' @return a character vector for the groups from 'mclust'. 
+#' @param annCol input an information of samples that is used to combine the sample.
+#'   
+#' @return a character vector for the groups from 'mclust'.
+#'  
 #' @seealso \code{\link{Mclust}} which this function wraps.
 #' @export
 #' @examples

@@ -2,28 +2,28 @@
 % Please edit documentation in R/utility_function.R
 \name{rename_robj}
 \alias{rename_robj}
-\title{Rename an object to a new name.}
+\title{Rename an R object to a new name.}
 \usage{
-rename_robj(a, b, overwrite = TRUE)
+rename_robj(from, to, overwrite = TRUE)
 }
 \arguments{
-\item{a}{input an object that user would like to rename.}
+\item{from}{input an object that user would like to rename.}
 
-\item{b}{input a new name of an object that user define.}
+\item{to}{input a new name of an object that user define.}
 
 \item{overwrite}{default is set to TRUE. The original object would be deleted
-after rename it.}
+ after rename it.}
 }
 \value{
 an object with a new name user defined.
 }
 \description{
-Rename an object to a new in an environment. If overwrite parameter is set to
+Rename an R object in an environment. If overwrite parameter is set to
  TRUE (default), the original object would be deleted.
 }
 \examples{
 x=1:10
-rename_robj(x, newx)
+rename_robj(from=x, to=newx)
 exists("x")
 exists("newx")
 }

@@ -18,6 +18,9 @@ For interval censored data, the status indicator is 0=right
 censored, 1=event at 'time', 2=left censored, 3=interval
 censored.  Although unusual, the event indicator can be
 omitted, in which case all subjects are assumed to have an event.}
+
+\item{LRT}{p-value is return from likelihood ratio test as default. Otherwise is
+ logrank test version (wald test).}
 }
 \value{
 the correlation coefficient and p-value.
@@ -35,6 +38,6 @@ hmohiv<-read.table("http://www.ats.ucla.edu/stat/r/examples/asa/hmohiv.csv", sep
 coxph_VecMat(mat=mat, time=hmohiv$time, event=hmohiv$censor)
 }
 \seealso{
-\code{\link{coxph, Surv}} which this function wraps.
+\code{\link{coxph}} and \code{\link{Surv}} which this function wraps.
 }
 

@@ -11,7 +11,9 @@ stats_wilcox.test(data, group, gpMat = FALSE, ...)
 
 \item{group}{a vector of factor which will be concatenated to the row of 'data'.}
 
-\item{rowlevel}{specifies the order of factor use in a contingency table.}
+\item{gpMat}{specifies whether group info is in thr matrix. Default is FALSE.}
+
+\item{...}{other parameters in wilcox.test function.}
 }
 \value{
 the contingency table and p-value.
@@ -36,6 +38,6 @@ si.gp <- rchisq(30,2)
 stats_wilcox.test(dat, si.gp, gpMat=TRUE)
 }
 \seealso{
-\code{\link{chisq.test}} which this function wraps.
+\code{\link{wilcox.test}} which this function wraps.
 }
 

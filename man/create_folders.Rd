@@ -2,7 +2,7 @@
 % Please edit documentation in R/utility_function.R
 \name{create_folders}
 \alias{create_folders}
-\title{Create directory/folder after checking directory/folder existence}
+\title{Create directory/folder after checking directory/folder existence using a character string}
 \usage{
 create_folders(fname)
 }
@@ -24,6 +24,7 @@ create_folders(fName)
 list.dirs("./", full.names=FALSE, recursive = FALSE)
 }
 \seealso{
-\code{\link{dir.create}} which this function wraps. Also see \code{\link{create_folder}}.
+\code{\link{dir.create}} which this function wraps. Also see \code{\link{create_folder}}
+ for using direct path.
 }
 

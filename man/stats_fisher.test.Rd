@@ -12,6 +12,8 @@ stats_fisher.test(data, group, rowlevel, ...)
 \item{group}{a vector of factor which will be concatenated to the row of 'data'.}
 
 \item{rowlevel}{specifies the order of factor use in a contingency table.}
+
+\item{...}{other parameters in fisher.test function.}
 }
 \value{
 the contingency table and p-value.

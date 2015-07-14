@@ -26,6 +26,7 @@ dat.dir <- file.path("./", "xy.RData")
 show_robj(dat.dir)
 rm(x, y)
 x <- get_robj(x="x", dat.dir)
+x
 }
 \seealso{
 \code{\link{get}} which this function wraps.
