@@ -22,6 +22,7 @@ show_robj <- function(RData){
 	return(objects(tempEnv))
 }
 
+
 #' Get one of the objects from a R file/RData.  
 #'
 #' This function allows you to get one of the objects from
