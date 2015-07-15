@@ -14,16 +14,6 @@ Description: A accumulated suite of functions in R that was designed
 License: MIT + file LICENSE
 Depends:
     R (>= 3.1.0),
-    ClassDiscovery,
-    data.table,
-    DESeq2,
-    ggplot2,
-    gridExtra,
-    Hmisc,
-    limma,
-    mclust,
-    plyr,
-    survival
 Suggests:
     knitr,
     rmarkdown,
@@ -31,8 +21,3 @@ Suggests:
     NMF,
     RColorBrewer
 LazyData: true
-Collate:
-    'BI.R'
-    'autoplot.R'
-    'modelTesting.R'
-    'utility_function.R'
