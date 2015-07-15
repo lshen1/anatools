@@ -70,6 +70,140 @@ exists_robj <- function(object)
   return(exists(as.character(substitute(object))))
 }
 
+#' Rename an R object to a new name.  
+#'
+#' Rename an R object in an environment. If overwrite parameter is set to
+#'  TRUE (default), the original object would be deleted.
+#'  
+#' @param from input an object that user would like to rename.  
+#' @param to input a new name of an object that user define.
+#' @param overwrite default is set to TRUE. The original object would be deleted
+#'  after rename it.
+#'       
+#' @return an object with a new name user defined.
+#' 
+#' @seealso \code{\link{assign}} which this function wraps.
+#' @export
+#' @examples
+#' x=1:10
+#' rename_robj(from=x, to=newx)
+#' exists("x")
+#' exists("newx")
+rename_robj <- function (from, to, overwrite=TRUE) {
+  anm <- deparse(substitute(from))
+  bnm <- deparse(substitute(to))
+  if (!exists(anm,where=1,inherits=FALSE)) stop(paste(anm, "does not exist.\n"))
+  if (exists(bnm,where=1,inherits=FALSE)) {
+    #ans <- readline(paste("Overwrite ", bnm, "? (y/n) ", sep =""))
+    #      if (ans != "y")
+    if (overwrite != TRUE)
+      return(invisible())
+  }
+  assign(bnm, from, pos = 1)
+  rm(list = anm, pos = 1)
+  invisible()
+}
+
+#' Aggregate the microarry data based on the maximum variance probe of gene probesets. 
+#'
+#' In microarray analysis, some genes are associated with multiple probes. In practice,
+#'  sometime we need to summarize the expression in gene level (each gene has only one
+#'  value of a given sample). This function would aggregate the microarry data based on
+#'  the maximum variance probe of gene probesets.
+#'    
+#' @param dat input a expression data.frame (probes in row; samples in column).  
+#' @param annot input the annotation of the expression data (must have identical rownames).
+#' @param symcol default is set to "Symbol" which defines the column with multiple probes
+#'  information from the annotation.
+#'      
+#' @return a list contains the list of "data" and "annot" with maximum variance probesets.
+#'  
+#' @seealso \code{\link{var}} which this function wraps.
+#' @export
+#' @examples
+#' # Simulate gene expression data for 100 probes and 6 microarrays
+#' # Microarray are in two groups
+#' # First 50 probes are differentially expressed in second group
+#' # Std deviations vary between genes with prior df=4
+#' sd <- 0.3*sqrt(4/rchisq(100,df=4))
+#' y <- data.frame(matrix(rnorm(100*6,sd=sd),100,6))
+#' rownames(y) <- paste("Probe",1:100, sep="_")
+#' colnames(y) <- c(paste("A", 1:3, sep=""), paste("B", 1:3, sep=""))
+#' y[1:50,4:6] <- y[1:50,4:6] + 2
+#' y[sample(seq(1,100), 10), 1] <- NA
+#' y[sample(seq(1,100), 10), 3] <- NA
+#' y[sample(seq(1,100), 10), 5] <- NA
+#' set.seed(123)
+#' annot.y <- data.frame(ID=rownames(y),
+#'  Symbol=paste("Gene", sort(sample(seq(1, 75), 100, replace=TRUE)), sep="_"))
+#' rownames(annot.y) <- rownames(y)
+#' mvDat <- aggregate_maxvariance(y, annot.y, symcol="Symbol")
+#' names(mvDat)                     
+aggregate_maxvariance <- function(dat, annot, symcol="Symbol"){
+  if (identical(rownames(dat), rownames(annot))==FALSE){
+    stop("Data and Annotation must have identical rownames!")
+  } else {
+    usedat <- data.frame(var=apply(dat, 1, var, na.rm=TRUE), Symbol=annot[,symcol],
+                         stringsAsFactors=FALSE)
+    dat.ls <- split(usedat, usedat$Symbol)
+    ann.ls <- split(annot, annot[,symcol])
+    ind.ls <- lapply(unname(dat.ls), function(x) x[which.max(x$var),])
+    ind <- rownames(do.call("rbind", ind.ls))
+    res <- list(data=dat[ind,], annot=annot[ind,])
+    return(res)
+  }
+}
+
+
+#' Aggregate the microarry data based on the mean of gene probesets. 
+#'
+#' In microarray analysis, some genes are associated with multiple probes. In practice,
+#'  sometime we need to summarize the expression in gene level (each gene has only one
+#'  value of a given sample). This function would aggregate the microarry data based on
+#'  the mean of gene probesets.
+#'    
+#' @param dat input a expression data.frame (probes in row; samples in column).  
+#' @param annot input the annotation of the expression data (must have identical rownames).
+#' @param symcol default is set to "Symbol" which defines the column with multiple probes
+#'  information from the annotation.
+#'      
+#' @return a list contains the aggregated "data" and "annot".
+#'  
+#' @seealso \code{\link{aggregate}} which this function wraps.
+#' @export
+#' @examples
+#' # Simulate gene expression data for 100 probes and 6 microarrays
+#' # Microarray are in two groups
+#' # First 50 probes are differentially expressed in second group
+#' # Std deviations vary between genes with prior df=4
+#' sd <- 0.3*sqrt(4/rchisq(100,df=4))
+#' y <- data.frame(matrix(rnorm(100*6,sd=sd),100,6))
+#' rownames(y) <- paste("Probe",1:100, sep="_")
+#' colnames(y) <- c(paste("A", 1:3, sep=""), paste("B", 1:3, sep=""))
+#' y[1:50,4:6] <- y[1:50,4:6] + 2
+#' y[sample(seq(1,100), 10), 1] <- NA
+#' y[sample(seq(1,100), 10), 3] <- NA
+#' y[sample(seq(1,100), 10), 5] <- NA
+#' set.seed(123)
+#' annot.y <- data.frame(ID=rownames(y),
+#'  Symbol=paste("Gene", sort(sample(seq(1, 75), 100, replace=TRUE)), sep="_"))
+#' rownames(annot.y) <- rownames(y)
+#' mnDat <- aggregate_mean(y, annot.y, symcol="Symbol")
+#' names(mnDat)                     
+aggregate_mean <- function(dat, annot, symcol="Symbol"){
+  if (identical(rownames(dat), rownames(annot))==FALSE){
+    stop("Data and Annotation must have identical rownames!")
+  } else {
+    dat.avg <- aggregate(dat, list(Symbol=annot[,symcol]), mean, na.rm=TRUE)
+    rownames(dat.avg) <- dat.avg[, 1]
+    dat.avg <- dat.avg[, -1]
+    ind <- rownames(dat.avg)
+    ann.avg <- annot[match(ind, annot[,symcol]),]
+    rownames(ann.avg) <- ann.avg[,symcol]
+    res <- list(data=dat.avg, annot=ann.avg)
+    return(res)
+  }
+}
 
 
 
