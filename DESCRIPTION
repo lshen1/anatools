@@ -15,11 +15,9 @@ License: MIT + file LICENSE
 Depends:
     R (>= 3.1.0),
 Suggests:
-    devtools,
     knitr,
-    knitrBootstrap,
     rmarkdown,
+    knitrBootstrap,
     NMF,
     RColorBrewer
 LazyData: true
-URL: https://github.com/lshen1/anatools
