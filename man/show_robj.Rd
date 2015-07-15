@@ -18,6 +18,11 @@ This function allows you to list the names of objects from
  a R file/RData
 }
 \examples{
+x=1:10
+y=letters[1:10]
+save(x, y, file="xy.RData")
+dat.dir <- file.path("./", "xy.RData")
+show_robj(dat.dir)
 }
 \seealso{
 \code{\link{objects}} which this function wraps.

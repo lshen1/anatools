@@ -11,7 +11,8 @@
 #' @seealso \code{\link{objects}} which this function wraps.
 #' @export
 #' @examples
-#' x <- 1:10
+#' x=1:10
+#' y=letters[1:10]
 show_robj <- function(RData){
   tempEnv <- new.env()
 	load(RData, envir=tempEnv)
