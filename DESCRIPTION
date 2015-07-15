@@ -13,11 +13,5 @@ Description: A accumulated suite of functions in R that was designed
     Cancer Center (MDACC) and with the broader community.
 License: MIT + file LICENSE
 Depends:
-    R (>= 3.1.0),
-Suggests:
-    knitr,
-    rmarkdown,
-    knitrBootstrap,
-    NMF,
-    RColorBrewer
+    R (>= 3.1.0)
 LazyData: true
