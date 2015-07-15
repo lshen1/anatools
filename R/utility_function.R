@@ -70,39 +70,7 @@ exists_robj <- function(object)
   return(exists(as.character(substitute(object))))
 }
 
-#' Rename an R object to a new name.  
-#'
-#' Rename an R object in an environment. If overwrite parameter is set to
-#'  TRUE (default), the original object would be deleted.
-#'  
-#' @param from input an object that user would like to rename.  
-#' @param to input a new name of an object that user define.
-#' @param overwrite default is set to TRUE. The original object would be deleted
-#'  after rename it.
-#'       
-#' @return an object with a new name user defined.
-#' 
-#' @seealso \code{\link{assign}} which this function wraps.
-#' @export
-#' @examples
-#' x=1:10
-#' rename_robj(from=x, to=newx)
-#' exists("x")
-#' exists("newx")
-rename_robj <- function (from, to, overwrite=TRUE) {
-  anm <- deparse(substitute(from))
-  bnm <- deparse(substitute(to))
-  if (!exists(anm,where=1,inherits=FALSE)) stop(paste(anm, "does not exist.\n"))
-  if (exists(bnm,where=1,inherits=FALSE)) {
-    #ans <- readline(paste("Overwrite ", bnm, "? (y/n) ", sep =""))
-    #      if (ans != "y")
-    if (overwrite != TRUE)
-      return(invisible())
-  }
-  assign(bnm, from, pos = 1)
-  rm(list = anm, pos = 1)
-  invisible()
-}
+
 
 #' Aggregate the microarry data based on the maximum variance probe of gene probesets. 
 #'
