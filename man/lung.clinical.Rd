@@ -3,7 +3,7 @@
 \docType{data}
 \name{lung.clinical}
 \alias{lung.clinical}
-\title{A subset of clinical information of a lung dataset.}
+\title{A subset of clinical information of a lung cancer dataset.}
 \format{A data frame with 444 rows and 10 variables:
 \describe{
   \item{PATIENT_ID}{Patient ID}

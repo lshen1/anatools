@@ -3,7 +3,7 @@
 \docType{data}
 \name{lung.dataset}
 \alias{lung.dataset}
-\title{A subset of expression microarray of a lung dataset.}
+\title{A subset of expression microarray of a lung cancer dataset.}
 \format{A matrix with 150 rows and 444 samples:
 \describe{
   \item{row}{Probe ID}

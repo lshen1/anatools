@@ -14,10 +14,13 @@ Description: A accumulated suite of functions in R that was designed
 License: MIT + file LICENSE
 Depends:
     R (>= 3.1.0),
-Imports:
     ggplot2,
+    survival
+Imports:
+    data.table,
+    gridExtra,
     mclust,
-    plyr,
+    plyr
 Suggests:
     knitr,
     rmarkdown,
@@ -25,3 +28,8 @@ Suggests:
     NMF,
     RColorBrewer
 LazyData: true
+Collate:
+    'BI.R'
+    'autoplot.R'
+    'extrdata.R'
+    'utility_function.R'
