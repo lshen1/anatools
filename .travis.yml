@@ -12,9 +12,9 @@ before_install:
   - chmod 755 ./travis-tool.sh
   - ./travis-tool.sh bootstrap
 install:
-  - wget http://bioinformatics.mdanderson.org/OOMPA/3.1/src/contrib/ClassDiscovery_3.0.0.tar.gz
-  - tar -xzvf ClassDiscovery_3.0.0.tar.gz
-  - cd ClassDiscovery_3.0.0/ClassDiscovery && ./configure --prefix=/usr && make && sudo make install
+#  - wget http://bioinformatics.mdanderson.org/OOMPA/3.1/src/contrib/ClassDiscovery_3.0.0.tar.gz
+#  - tar -xzvf ClassDiscovery_3.0.0.tar.gz
+#  - cd ClassDiscovery && ./configure --prefix=/usr && make && sudo make install
   - ./travis-tool.sh install_deps
   - ./travis-tool.sh install_bioc_deps
 script: ./travis-tool.sh run_tests

@@ -15,7 +15,6 @@ License: MIT + file LICENSE
 Depends:
     R (>= 3.1.0),
 Imports:
-    ClassDiscovery,
     ggplot2,
     mclust,
     plyr,

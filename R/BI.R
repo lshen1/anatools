@@ -1,3 +1,53 @@
+
+
+#' Generate Bimodality Index (BI) for microarray type of data.   
+#'
+#' The bimodality index is a continuous measure of the extent to 
+#'  which a set of (univariate) data fits a two-component mixture model.
+#'  The score is larger if the two components are balanced in size or if
+#'  the separation between the two modes is larger.
+#'  
+#' @param dataset A matrix or data.frame, usually with columns representing samples
+#'  and rows representing genes or proteins.
+#' @param verbose A logical value; should the function output a stream of information
+#'  while it is working?
+#'  
+#' @return a data frame containing six columns, with the rows corresponding to the
+#'  rows of the original data set.  The columns contain the four parameters from the
+#'  normal mixture model (mu1, mu2, sigma, and pi) along with the standardized
+#'  distance 'delta' and the bimodal index (BI).
+#'  
+#' @seealso \code{\link{bimodalIndex}} which this function wraps.
+#' @export
+#' @importFrom mclust mclustBIC
+#' @examples
+#' data(lung.dataset)
+#' bi <- bimodalIndex(lung.dataset, verbose=FALSE)
+#' summary(bi)
+bimodalIndex <- function(dataset, verbose=TRUE) {
+  bim <- matrix(NA, nrow=nrow(dataset), ncol=6)
+  if (verbose) cat("1 ")
+  for (i in 1:nrow(dataset)) {
+    if (verbose && 0 == i%%100) cat(".")
+    if (verbose && 0 == i%%1000) cat(paste("\n", 1 + i/1000, ' ', sep=''))
+    x <- as.vector(as.matrix(dataset[i, ]))
+    if (any(is.na(x))) next
+    mc <- mclust::Mclust(x, G = 2, modelNames = "E")
+    sigma <- sqrt(mc$parameters$variance$sigmasq)
+    delta <- abs(diff(mc$parameters$mean))/sigma
+    #    pi <- max(mc$parameters$pro)
+    pi <- mc$parameters$pro[1]
+    bi <- delta * sqrt(pi*(1-pi))
+    bim[i,] <-  c(mc$parameters$mean, sigma=sigma, delta=delta, pi=pi, bim=bi)
+  }
+  if(verbose) cat("\n")
+  dimnames(bim) <- list(rownames(dataset),
+                        c("mu1", "mu2", "sigma", "delta", "pi", "BI"))
+  bim <- as.data.frame(bim)
+  return(bim)
+}
+
+
 #' Generate density-plot with Bimodality Index (BI) for microarray type of data.   
 #'
 #' In processing microarry data, sometime we want to find some genes with meaningful 
@@ -35,7 +85,7 @@ BI_densityplot <- function(x, G=2, annCol=c("1"="Low", "2"="High"), annColors=NU
     stop("Number of Groups (G) must have the same length of annotation (annCol).\n")
   }
   if (G==length(annCol)) {
-    bi <- ClassDiscovery::bimodalIndex(as.matrix(t(x)), verbose=FALSE)$BI
+    bi <- bimodalIndex(as.matrix(t(x)), verbose=FALSE)$BI
     bscore <- plyr::revalue(as.character(mclust::Mclust(x, G=G, "E")$classification),
                             annCol)
     d_long <- data.frame(x, bscore)
