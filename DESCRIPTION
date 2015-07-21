@@ -19,6 +19,8 @@ Depends:
 Imports:
     data.table,
     gridExtra,
+    Hmisc,
+    limma,
     mclust,
     plyr
 Suggests:
@@ -32,4 +34,5 @@ Collate:
     'BI.R'
     'autoplot.R'
     'extrdata.R'
+    'modelTesting.R'
     'utility_function.R'
